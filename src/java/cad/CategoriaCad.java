@@ -80,4 +80,25 @@ public class CategoriaCad {
             return false;
         }
     }
+    
+        public static ArrayList<Categoria> listarTodoDeCategoria(){
+        try {
+            String sql = "{call sp_listartododeCategoria()}";
+            Connection c = Conexion.conectar();
+            CallableStatement sentencia;
+            sentencia = c.prepareCall(sql);
+            ResultSet resultado = sentencia.executeQuery();
+            ArrayList<Categoria> lista = new ArrayList<>();
+            while(resultado.next()){
+                Categoria cat = new Categoria();
+                cat.setCodigo(resultado.getInt("codigo"));
+                cat.setNombre(resultado.getString("nombre"));
+                lista.add(cat);
+            }
+            return lista;
+        } catch (SQLException ex) {
+            return null;
+        }
+        
+    }
 }

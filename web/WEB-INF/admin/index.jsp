@@ -5,6 +5,10 @@
 --%>
 
 
+<%@page import="cad.MarcaCad"%>
+<%@page import="JavaBeans.Marca"%>
+<%@page import="cad.CategoriaCad"%>
+<%@page import="JavaBeans.Categoria"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="es">
@@ -65,14 +69,18 @@
                                             <br/>
                                             Marca:<br/>
                                             <select name="marca">
-                                                <option></option>
-                                                <option></option>
+                                                <option>Seleccionar marca</option>
+                                                <% for (Marca m: MarcaCad.listarTodoDeMarcas()){%>
+                                                <option value="<%=m.getCodigo() %>"><%=m.getNombre() %></option>
+                                                <% } %>
                                             </select>
                                             <br/>
                                             Categoría:<br/>
                                             <select name="categoria">
-                                                <option></option>
-                                                <option></option>
+                                                <option>Seleccionar categoría</option>
+                                                <% for (Categoria c:CategoriaCad.listarTodoDeCategoria()){%>
+                                                <option value="<%=c.getCodigo() %>"><%=c.getNombre() %></option>
+                                                <% } %>
                                             </select>
                                             <br/>
                                             Descripción:<br/>

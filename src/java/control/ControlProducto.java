@@ -5,12 +5,25 @@
  */
 package control;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  *
@@ -70,12 +83,51 @@ public class ControlProducto extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+        String url = subirImagen(request);
+        response.sendRedirect("foto/"+url);
     }
 
     
-    private void subirImagen(){
+    private String subirImagen(HttpServletRequest request){
+        try{
+            FileItemFactory fileFactory = new DiskFileItemFactory();
         
+            ServletFileUpload servletUpload = new ServletFileUpload(fileFactory);
+            
+            String nombre = "";
+            List items = servletUpload.parseRequest(request);
+            
+            for( int i = 0; i < items.size(); i++){
+            
+                FileItem item = (FileItem) items.get(i);
+                if(!item.isFormField()){
+                    String ruta = request.getServletContext()
+                                         .getRealPath("/")+"foto/";
+                    SimpleDateFormat sdf = new SimpleDateFormat("ddMyyyyhhmmss");
+                    String fecha = sdf.format(new Date());
+                    
+                    nombre = fecha+new Random().nextLong()+item.getName();
+                    String nuevoNombre = ruta+nombre;
+                    File folder = new File(ruta);
+                    if(!folder.exists())
+                        folder.mkdirs();
+                    
+                    File imagen = new File(nuevoNombre);
+                    if(item.getContentType().contains("image")){
+                        item.write(imagen);
+                        request.setAttribute("subida", true);
+                        return nombre;
+                    }
+                    
+                }
+            }
+        
+        } catch (FileUploadException ex) {
+            request.setAttribute("subida", false);
+        } catch (Exception ex) {
+            request.setAttribute("subida", false);
+        }
+        return "";
     }
     /**
      * Returns a short description of the servlet.

@@ -35,7 +35,7 @@
 				<div class="col-sm-10 clearfix">
 										
                                     <h3>Gestionar producto</h3>					
-                                    <form action="ControlProducto" method="post">
+                                    <form action="ControlProducto" enctype="multipart/form-data" method="post">
                                         <div class="form-one">
                                             Nombre:<br/>
                                             <input type="text" name="nombre" placeholder="Nombre producto" value="" />

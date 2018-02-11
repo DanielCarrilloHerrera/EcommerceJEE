@@ -18,7 +18,7 @@
                                                                                     <%}%>
                                                                                     href="#<%= listaSuperior.get(i).getCodigo() %>">
                                                                                     <%if (CategoriaCad.esSuperior(codigo)){%><span class="badge pull-right"><i class="fa fa-plus"></i></span><%}%>
-											<%= listaSuperior.get(i).getNombre() %>
+											<a href="?category=<%=codigo%>"><%= listaSuperior.get(i).getNombre() %></a>
 										</a>
 									</h4>
 								</div>
@@ -27,7 +27,7 @@
 										<ul><%for(int j = 0; j < listaSubCategoria.size(); j++){
                                                                                         if(listaSubCategoria.get(j).getCategoria_superior() == listaSuperior.get(i).getCodigo()){
                                                                                              %>
-                                                                                    <li><a href="#"><%=listaSubCategoria.get(j).getNombre()%></a></li>    
+                                                                                    <li><a href="?category=<%=codigo%>"><%=listaSubCategoria.get(j).getNombre()%></a></li>    
                                                                                     <%listaSubCategoria.remove(j);%>
                                                                                     <%}}%>
                                                                                 </ul>

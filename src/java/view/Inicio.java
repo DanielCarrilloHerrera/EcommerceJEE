@@ -36,6 +36,11 @@ public class Inicio extends HttpServlet {
             sesion.setAttribute("moneda", "MXN");
             sesion.setAttribute("nom_moneda", "$ Pesos Mexicanos");
         }
+        if(request.getParameter("category")!= null){
+            sesion.setAttribute("category", Integer.parseInt(request.getParameter("category")));
+        }else{
+            sesion.setAttribute("category", 0);
+        }
         request.getRequestDispatcher("WEB-INF/index.jsp").forward(request, response);
     }
 

@@ -33,7 +33,7 @@
                                 </div>
 				
 				<div class="col-sm-10 clearfix">
-										
+                                ${mensaje}
                                     <h3>Gestionar producto</h3>					
                                     <form action="ControlProducto" enctype="multipart/form-data" method="post">
                                         <div class="form-one">
@@ -91,11 +91,13 @@
                                             <input type="checkbox" name="nuevo" value="ON" checked="checked" />
                                             <br/>
                                             Recomendado?:<br/>
-                                            <input type="checkbox" name="recomendado" value="OFF"/>
+                                            <input type="checkbox" name="recomendado" value="ON"/>
                                             <br/>
                                             Visible?:<br/>
+                                            <input type="checkbox" name="visible" value="ON"/>
+                                            <br/>
                                             <hr/>
-                                            Seleccionar imagen:<input type="checkbox" name="visible" value="ON" checked="checked" />
+                                            Seleccionar imagen:
                                             <br/>
                                             <input type="file" name="imagen" value="Seleccionar una imagen" required />
                                             <input name="accion" class="btn btn-success" type="submit" value="Registrar" />

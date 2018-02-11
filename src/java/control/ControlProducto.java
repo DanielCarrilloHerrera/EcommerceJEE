@@ -5,6 +5,9 @@
  */
 package control;
 
+import JavaBeans.Producto;
+import JavaBeans.ProductoMoneda;
+import cad.ProductoCad;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -83,12 +86,100 @@ public class ControlProducto extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = subirImagen(request);
-        response.sendRedirect("foto/"+url);
+        
+        recibirDatos(request);
+        
+        String url = request.getAttribute("imagen").toString();
+        String nombre = request.getAttribute("nombre").toString();
+        float precio = Float.parseFloat(request.getAttribute("precio").toString());
+        float precion = Float.parseFloat(request.getAttribute("precionuevo").toString());
+        
+        float preciocop = Float.parseFloat(request.getAttribute("preciocop").toString());
+        float precioncop = Float.parseFloat(request.getAttribute("precionuevocop").toString());
+        
+        float preciousd = Float.parseFloat(request.getAttribute("preciousd").toString());
+        float precionusd = Float.parseFloat(request.getAttribute("precionuevousd").toString());
+        
+        float preciopen = Float.parseFloat(request.getAttribute("preciopen").toString());
+        float precionpen = Float.parseFloat(request.getAttribute("precionuevopen").toString());
+        
+        int cantidad = Integer.parseInt(request.getAttribute("cantidad").toString());
+        int marca= Integer.parseInt(request.getAttribute("marca").toString());
+        int categoria = Integer.parseInt(request.getAttribute("marca").toString());
+        
+        String descripcion = request.getParameter("descripcion");
+        
+        boolean nuevo, recomendado, visible;
+        
+        try{
+            nuevo = request.getAttribute("nuevo").toString().equalsIgnoreCase("on");
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            nuevo=false;
+        }
+        
+        try{
+            recomendado = request.getAttribute("recomendado").toString().equalsIgnoreCase("on");
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            recomendado=false;
+        }
+        
+        try{
+            visible = request.getAttribute("visible").toString().equalsIgnoreCase("on");
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            visible=false;
+        }
+        String accion = request.getAttribute("accion").toString();
+        
+        Producto p = new Producto();
+        p.setNombre(nombre);
+        p.setPrecio(precio);
+        p.setPrecionuevo(precion);
+        p.setCodigo_categoria(categoria);
+        p.setCodigo_marca(categoria);
+        p.setDescripcion(descripcion);
+        p.setImg(url);
+        p.setNuevo(nuevo);
+        p.setRecomendado(recomendado);
+        p.setStock(cantidad);
+        p.setVisible(visible);
+        
+        ProductoMoneda cop = new ProductoMoneda();
+        cop.setMoneda("COP");
+        cop.setPrecio(preciocop);
+        cop.setPrecionuevo(precioncop);
+        
+        ProductoMoneda usd = new ProductoMoneda();
+        usd.setMoneda("USD");
+        usd.setPrecio(preciousd);
+        usd.setPrecionuevo(precionusd);
+        
+        ProductoMoneda pen = new ProductoMoneda();
+        pen.setMoneda("PEN");
+        pen.setPrecio(preciopen);
+        pen.setPrecionuevo(precionpen);
+        
+        if(accion.equalsIgnoreCase("registrar")){
+            if(ProductoCad.registrarProducto(p, cop, usd, pen)){
+                request.setAttribute("mensaje", "<p style='color:green'>Producto registrado</p>");
+            }else{
+                request.setAttribute("mensaje", "<p style='color:red'>Producto no registrado</p>");
+            }
+            
+        }else{
+            request.setAttribute("mensaje", "<p style='color:red'>Acción desconocida</p>");
+        }
+        
+        request.getRequestDispatcher("admin").forward(request, response);
     }
 
     
-    private String subirImagen(HttpServletRequest request){
+    private void recibirDatos(HttpServletRequest request){
         try{
             FileItemFactory fileFactory = new DiskFileItemFactory();
         
@@ -115,19 +206,21 @@ public class ControlProducto extends HttpServlet {
                     File imagen = new File(nuevoNombre);
                     if(item.getContentType().contains("image")){
                         item.write(imagen);
-                        request.setAttribute("subida", true);
-                        return nombre;
+                        request.setAttribute(item.getFieldName(), nombre);                   
                     }
-                    
+                }else{
+                    request.setAttribute(item.getFieldName(), item.getString());
                 }
             }
         
         } catch (FileUploadException ex) {
+            ex.printStackTrace();
             request.setAttribute("subida", false);
         } catch (Exception ex) {
+            ex.printStackTrace();
             request.setAttribute("subida", false);
         }
-        return "";
+        
     }
     /**
      * Returns a short description of the servlet.

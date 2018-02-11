@@ -24,7 +24,9 @@
 								</div>
 								<div id="<%= listaSuperior.get(i).getCodigo() %>" class="panel-collapse collapse">
 									<div class="panel-body">
-										<ul><%for(int j = 0; j < listaSubCategoria.size(); j++){
+										<ul><%int codigoSub = 0;
+                                                                                     for(int j = 0; j < listaSubCategoria.size(); j++){
+                                                                                         codigoSub = listaSubCategoria.get(j).getCodigo();
                                                                                         if(listaSubCategoria.get(j).getCategoria_superior() == listaSuperior.get(i).getCodigo()){
                                                                                              %>
                                                                                     <li><a href="?category=<%=codigo%>"><%=listaSubCategoria.get(j).getNombre()%></a></li>    
